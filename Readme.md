@@ -96,4 +96,4 @@ python todocli.py show
 
 ## Note:
 
-Note: This is a basic CLI App and it's giving purr.
+Note: This is a basic CLI App and it's giving purr <3.
