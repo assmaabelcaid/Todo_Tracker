@@ -1,6 +1,8 @@
 import typer
 from rich.console import Console
 from rich.table import Table
+from model import Todo
+from database import get_all_todos, delete_todo, insert_todo, complete_todo, update_todo
 
 console = Console()
 app = typer.Typer()
@@ -10,6 +12,9 @@ app = typer.Typer()
 @app.command(short_help='Adds an item') #short help is used to add a little help
 def add(task: str, category: str): #take as input the item and the category
     typer.echo(f'Adding {task} to {category}') #typer.echo prints to the CLI
+
+    todo = Todo(task,category)
+    insert_todo(todo)
     show()
 
 #function to delete the task
@@ -17,6 +22,7 @@ def add(task: str, category: str): #take as input the item and the category
 @app.command(short_help='Removes an item')
 def delete(position: int):
     typer.echo(f'Deleting {position}')
+    delete_todo(position-1)
     show()
 
 #function to update the task
@@ -24,6 +30,7 @@ def delete(position: int):
 @app.command(short_help='Updates an item')
 def update(position: int, task: str = None, category: str = None):
     typer.echo(f'Updating {position}')
+    update_todo(position-1, task, category)
     show()
 
 #function to complete the task
@@ -31,13 +38,14 @@ def update(position: int, task: str = None, category: str = None):
 @app.command(short_help='Updates an item')
 def complete(position: int):
     typer.echo(f'Complete {position}')
+    complete_todo(position-1)
     show()
 
 #adding a little bit of style and color
 
 @app.command()
 def show():
-    tasks = [("Todo1", "Study"), ("Todo2", "Sports")]
+    tasks = get_all_todos()
     console.print("[bold magenta]Todos[/bold magenta]!")
 
     table = Table(show_header=True, header_style="bold blue")
@@ -53,9 +61,9 @@ def show():
         return 'white'
 
     for idx, task in enumerate(tasks, start=1):
-        c = get_category_color(task[1])
-        is_done_str = 'YES' if True == 2 else 'NO'
-        table.add_row(str(idx), task[0], f'[{c}]{task[1]}[/{c}]', is_done_str)
+        c = get_category_color(task.category)
+        is_done_str = 'YES' if task.status == 2 else 'NO'
+        table.add_row(str(idx), task.task, f'[{c}]{task.category}[/{c}]', is_done_str)
     console.print(table)
 
 
