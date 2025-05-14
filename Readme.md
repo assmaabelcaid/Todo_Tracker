@@ -1,6 +1,6 @@
 # To-do-Tracker-App
 
-Introducing a colorful To-do Tracking App project, because it's slay.
+Introducing a colorful To-do Tracking App project.
  
 
 
